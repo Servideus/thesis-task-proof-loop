@@ -1,0 +1,3 @@
+claim_id,section_id,claim_text,source_ids,locator_if_available,direct_quote_used,confidence_note,notes
+C1,1.1,"","S1","","no","",""
+C2,1.2,"","S2","","no","",""
