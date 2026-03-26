@@ -1,276 +1,305 @@
-# thesis-task-proof-loop
+---
+name: thesis-task-proof-loop
+description: Controlled repo-local workflow for long academic writing tasks such as diploma/thesis chapters, literature reviews, and research sections. Use when Codex needs to initialize or continue a task under `.agents/tasks/<TASK_ID>/`, freeze requirements, register approved sources, keep candidate sources separate, draft only from approved materials, log feedback signals, run fresh verification, and apply minimal traceable fixes.
+---
 
-Ты — skill для контролируемой академической работы с текстом.
+# Thesis Task Proof Loop
 
-Твоя задача — не фристайлом генерировать большие исследовательские тексты, а запускать дисциплинированный цикл, который превращает требования пользователя, заметки и утверждённые источники в трассируемый драфт и проверяемый пакет артефактов.
+Run this skill while your shell working directory is inside the target repository.
+When examples mention `scripts/task_loop.py`, that path is relative to this skill root.
 
-## Базовый цикл
+Read these references only when needed:
+- `references/REFERENCE.md` for install paths, commands, and generated files
+- `references/SCHEMAS.md` for artifact formats and validator expectations
+- `references/COMMANDS.md` for command-specific prompt shapes
+- `references/SUBAGENTS.md` for role boundaries and delegation order
 
-1. Заморозить задачу.
-2. Зафиксировать утверждённые источники.
-3. Писать драфт только по утверждённым материалам.
-4. Связать содержательные утверждения с источниками.
-5. Подготовить handoff и при необходимости сбросить контекст.
-6. Провести проверку в свежем контексте.
-7. Внести только минимально необходимые безопасные правки.
-8. Повторять цикл до `PASS`, `PASS_WITH_WARNINGS` или честного `FAIL`.
+## Core contract
 
-## Жёсткие правила
-
-1. Никогда не выдумывай ссылки, цитаты, страницы, DOI, URL, статистику, авторов или библиографические сведения.
-2. Никогда не ссылайся на источник, которого нет в `sources_registry.md`.
-3. Никогда не делай вид, что прочитал недоступный источник.
-4. Если базы источников недостаточно, скажи это прямо и остановись со статусом `FAIL`.
-5. Не переписывай весь раздел, если нужны только локальные правки.
-6. Сохраняй утверждённый план, если пользователь явно не просил его изменить.
-7. Храни все рабочие артефакты в `.agents/tasks/<TASK_ID>/` целевого репозитория.
-8. Разделяй написание и проверку. Проверяющий должен работать в свежем контексте.
-9. Каждое нетривиальное утверждение в драфте должно быть трассируемо через `claim_source_map.csv`.
-10. Если требования конфликтуют, зафиксируй конфликт в `problems.md` и остановись.
-11. Если используется прямая цитата, явно отмечай её в `quotes.md` и указывай локатор только тогда, когда он реально доступен.
-12. Предпочитай узкие, подтверждённые доказательствами правки широким стилистическим переписываниям.
-13. Не превращай слабое доказательство в сильный вывод.
-14. Явно помечай неопределённость.
-15. Если пользователь дал требования вуза по оформлению, считай их обязательными.
-16. Никогда не сбрасывай контекст до того, как актуальное состояние задачи выгружено в рабочие артефакты.
-17. Источником истины являются файлы задачи, а не память текущего окна или история промежуточных рассуждений.
-
-## Входные данные, на которые можно опираться
-
-- описание задачи от пользователя;
-- утверждённый план;
-- утверждённые источники;
-- заметки и выписки пользователя;
-- существующие фрагменты черновика;
-- требования к оформлению.
-
-## Выходные артефакты, которые нужно создать или обновить
-
-Минимальный набор:
-
-- `spec.md`
-- `requirements.md`
-- `sources_registry.md`
-- `outline.md`
-- `draft.md`
-- `claim_source_map.csv`
-- `handoff.md`
-- `evidence.md`
-- `verdict.json`
-
-При необходимости также создавай или обновляй:
-
-- `quotes.md`
-- `problems.md`
-- `revision_log.md`
-
-## Обязательная структура рабочих файлов
+Operate through repo-local task artifacts, not through chat memory.
+Keep every working artifact inside:
 
 ```text
 .agents/tasks/<TASK_ID>/
-  spec.md
-  requirements.md
-  sources_registry.md
-  outline.md
-  draft.md
-  claim_source_map.csv
-  handoff.md
-  quotes.md
-  evidence.md
-  problems.md
-  revision_log.md
-  verdict.json
 ```
 
-## Политика handoff и сброса контекста
+Use this folder as the source of truth for:
+- frozen task scope
+- approved source registry
+- canonical section ids
+- draft state
+- claim-to-source traceability
+- feedback signals
+- evidence
+- verdicts
+- handoff state
 
-### Когда нужно обязательно готовить handoff и запускать новую роль в свежем контексте
+## Workflow commands
 
-- при смене роли;
-- при переходе к новой крупной фазе;
-- при переходе к новому разделу или новой главе;
-- после завершения итерации `драфт -> проверка -> правки`;
-- когда контекст загрязнён старыми гипотезами, версиями или спорящими между собой рассуждениями.
+Treat these words as commands when the user invokes this skill:
+- `init`
+- `freeze`
+- `sources`
+- `outline`
+- `draft`
+- `map`
+- `evidence`
+- `verify`
+- `fix`
+- `run`
+- `status`
+- `validate`
 
-### Когда не нужно сбрасывать контекст
+Script-backed commands:
 
-- внутри короткой локальной правки, если агент чинит один узкий дефект;
-- пока состояние задачи ещё не выгружено в файлы;
-- внутри небольшого непрерывного куска работы, если контекст остаётся чистым и управляемым.
+```bash
+python scripts/task_loop.py init --task-id <TASK_ID> --task-text "<task text>"
+python scripts/task_loop.py status --task-id <TASK_ID>
+python scripts/task_loop.py validate --task-id <TASK_ID>
+```
 
-### Что нужно сделать перед сбросом контекста
+Command inference:
+- if the task folder does not exist, do `init` only and stop
+- if `spec.md` is still placeholder-like, do `freeze`
+- if approved sources are missing, do `sources`
+- if canonical section ids are missing, do `outline`
+- if the draft is missing or placeholder-like, do `draft`
+- if claims are not mapped, do `map`
+- if evidence is stale or `UNKNOWN`, do `evidence`
+- if no fresh verdict exists, do `verify`
+- if verdict is `FAIL` or `PASS_WITH_WARNINGS`, do `fix`
 
-Перед reset агент обязан:
+## Hard rules
 
-1. обновить затронутые рабочие артефакты;
-2. записать `handoff.md`;
-3. явно перечислить, что уже стабильно, что сломано, что делать дальше и что трогать нельзя.
+1. Never invent citations, bibliographic fields, pages, DOI, URL, statistics, or quotes.
+2. Never cite anything outside `sources_registry.md`.
+3. Never silently treat `candidate_sources.md` as approved evidence.
+4. Never claim to have read an unavailable source.
+5. Never convert weak evidence into a strong conclusion.
+6. Keep canonical `section_id` values stable across `outline.md`, `draft.md`, and `claim_source_map.csv`.
+7. Log raw feedback separately from distilled instructions.
+8. Run verification in a fresh session or fresh role.
+9. Do not let the verifier patch the draft during verification.
+10. Apply only the smallest safe fix set from `problems.md`.
+11. Update artifacts before any reset or role change.
+12. Stop with `FAIL` when the source base or requirements are insufficient.
 
-### Что должен делать новый агент после reset
+## Main-line vs side-turns
 
-Новый агент должен читать не длинную историю переписки, а актуальные файлы задачи:
-
+Main-line artifacts:
 - `spec.md`
 - `requirements.md`
+- `writing_profile.md`
+- `advisor_preferences.md`
 - `sources_registry.md`
 - `outline.md`
 - `draft.md`
 - `claim_source_map.csv`
-- `handoff.md`
+- `quotes.md`
 - `evidence.md`
+- `evidence.json`
+- `feedback_digest.md`
+- `handoff.md`
+- `verdict.json`
+
+Side-turn artifacts:
+- `candidate_sources.md`
+- `scratchpad.md`
+- `feedback_log.jsonl`
+- `events.jsonl`
+
+Rules:
+- keep unapproved sources in `candidate_sources.md`
+- keep parking-lot ideas in `scratchpad.md`
+- keep raw next-state signals in `feedback_log.jsonl`
+- keep concise, reusable correction hints in `feedback_digest.md`
+- keep long-run observability in `events.jsonl`
+
+## Required artifact set
+
+Minimum required files:
+- `spec.md`
+- `requirements.md`
+- `writing_profile.md`
+- `advisor_preferences.md`
+- `sources_registry.md`
+- `candidate_sources.md`
+- `outline.md`
+- `draft.md`
+- `claim_source_map.csv`
+- `quotes.md`
+- `evidence.md`
+- `evidence.json`
+- `feedback_log.jsonl`
+- `feedback_digest.md`
+- `handoff.md`
 - `problems.md`
 - `revision_log.md`
 - `verdict.json`
+- `events.jsonl`
+- `scratchpad.md`
 
-## Рабочая процедура
+For exact schemas, read `references/SCHEMAS.md`.
 
-### Фаза 1 — Заморозить задачу
+## Phase behavior
 
-Создай `spec.md` и `requirements.md`.
+### `init`
 
-В `spec.md` должны быть:
+Create the repo-local task folder and required artifacts.
+Use:
 
-- идентификатор задачи;
-- целевой результат;
-- границы главы или раздела;
-- исключения;
-- язык текста;
-- целевой объём, если он известен;
-- стиль ссылок, если он известен;
-- критерии приёмки.
+```bash
+python scripts/task_loop.py init --task-id <TASK_ID> --task-text "<task text>"
+```
 
-В `requirements.md` собери:
+Stop after initialization unless the user explicitly asked for a later command.
 
-- требования вуза или преподавателя;
-- требования к структуре;
-- ограничения по источникам;
-- стилистические ограничения;
-- любые пользовательские не-обсуждаемые условия.
+### `freeze`
 
-Не начинай писать драфт, пока задача не заморожена.
+Fill and stabilize:
+- `spec.md`
+- `requirements.md`
+- `writing_profile.md`
+- `advisor_preferences.md`
 
-### Фаза 2 — Зафиксировать утверждённые источники
+Do not draft content during `freeze`.
+Acceptance criteria must be explicit as `AC1`, `AC2`, ...
 
-Создай `sources_registry.md`.
+### `sources`
 
-Для каждого утверждённого источника фиксируй:
+Register only approved sources in `sources_registry.md`.
+Keep speculative or not-yet-approved materials in `candidate_sources.md`.
+If a source is incomplete, mark its limits and permitted use.
 
-- `source_id`;
-- полное библиографическое описание, насколько оно реально доступно;
-- тип источника;
-- язык;
-- уровень доверия;
-- доступен ли полный текст;
-- для чего источник разрешено использовать.
+### `outline`
 
-Если источник слабый, неполный или сомнительный, явно помечай это.
+Create `outline.md` with canonical level-2 headings:
 
-Не цитируй ничего вне этого реестра.
+```text
+## [S1] ...
+## [S1.1] ...
+```
 
-### Фаза 3 — Построить или подтвердить план
+Each section should state:
+- purpose
+- planned claims
+- allowed `source_id` values
 
-Создай `outline.md`.
+### `draft`
 
-План должен:
+Write `draft.md` only from:
+- approved sources
+- frozen requirements
+- writing profile
+- advisor preferences
+- user-provided notes and excerpts
 
-- соответствовать замороженной задаче;
-- быть внутренне последовательным;
-- быть достаточно детализированным, чтобы потом можно было связать тезисы с источниками.
+Keep section ids aligned with `outline.md`.
 
-### Фаза 4 — Написать драфт по утверждённым материалам
+### `map`
 
-Создай или обнови `draft.md`.
+Map each nontrivial claim in `claim_source_map.csv`.
+If a direct quote is used, update `quotes.md`.
+Do not add unsupported new claims during mapping.
 
-Правила драфта:
+### `evidence`
 
-- используй только утверждённые источники, заметки пользователя и уже предоставленные фрагменты текста;
-- не завышай уверенность по сравнению с доказательствами;
-- различай факты, интерпретации и выводы;
-- используй термины последовательно;
-- сохраняй логику плана.
+Refresh:
+- `evidence.md`
+- `evidence.json`
+- `feedback_digest.md`
+- `events.jsonl`
 
-### Фаза 5 — Связать утверждения с источниками
+Judge acceptance criteria and quality gates independently.
+Do not widen the draft on this step.
 
-Создай или обнови `claim_source_map.csv`.
+### `verify`
 
-Для каждого содержательного утверждения фиксируй:
+Run a fresh verification pass.
+Read the repo-local artifacts, not the whole conversation.
+Write:
+- `verdict.json`
+- `problems.md` when overall result is not `PASS`
 
-- `claim_id`;
-- `section_id`;
-- краткий текст утверждения;
-- `source_id` или несколько `source_id`;
-- локатор, если он реально доступен;
-- пометку, использована ли прямая цитата.
+The verifier must not edit production text.
 
-### Фаза 6 — Собрать пакет доказательств
+### `fix`
 
-Создай `evidence.md`.
+Read only the spec, requirements, profiles, verifier output, and the necessary task files.
+Reconfirm each defect before editing.
+Make the smallest safe changes.
+Then refresh:
+- `evidence.md`
+- `evidence.json`
+- `revision_log.md`
+- `feedback_digest.md`
+- `handoff.md`
+- `events.jsonl`
 
-В нём кратко зафиксируй:
+### `run`
 
-- что было написано;
-- какие блоки на каких источниках держатся;
-- что осталось неопределённым;
-- где основные риски.
+Execute the loop serially:
 
-### Фаза 7 — Подготовить handoff и при необходимости сбросить контекст
+```text
+freeze -> sources -> outline -> draft -> map -> evidence -> verify -> fix(if needed) -> evidence -> verify
+```
 
-Создай или обнови `handoff.md`.
+Refresh `handoff.md`, `feedback_digest.md`, and `events.jsonl` after each major phase.
 
-В `handoff.md` обязательно зафиксируй:
+## Feedback-signal policy
 
-- что уже сделано;
-- что считается стабильным;
-- что остаётся проблемным;
-- что следующий агент должен сделать;
-- что трогать нельзя без отдельной причины.
+Treat each next-state signal as one of:
+- evaluative
+- directive
+- mixed
 
-Если происходит смена роли, переход к новой фазе или контекст загрязнён, продолжай работу в свежем контексте.
+For every important signal:
+1. record the raw signal in `feedback_log.jsonl`
+2. distill a concise actionable hint into `feedback_digest.md`
+3. connect the hint to affected sections, claims, or files
+4. mark whether the signal was applied, deferred, or rejected
 
-### Фаза 8 — Провести свежую проверку
+Do not use raw feedback as the final instruction by default.
+Distill it first.
 
-Создай или обнови `verdict.json`.
+## Handoff and reset policy
 
-Проверка в свежем контексте должна как минимум оценить:
+Before any reset or role change:
+1. update touched artifacts
+2. refresh `feedback_digest.md`
+3. refresh `handoff.md`
+4. append an event to `events.jsonl`
 
-- структуру;
-- дисциплину по источникам;
-- правдоподобие ссылок и библиографии;
-- логическую связность;
-- соответствие замороженным требованиям;
-- неподкреплённые утверждения;
-- противоречия;
-- завышенные выводы.
+Reset is mandatory:
+- after a full `draft -> verify -> fix` cycle
+- when switching roles
+- when moving to a new major section
+- when the current context is polluted by stale hypotheses
 
-Возможные итоговые статусы:
+Reset is not mandatory:
+- inside a narrow local fix
+- before the current state is written to files
 
-- `PASS`
-- `PASS_WITH_WARNINGS`
-- `FAIL`
+## Stop conditions
 
-### Фаза 9 — Внести минимальные правки
+Return `FAIL` when:
+- approved sources are insufficient
+- requirements conflict materially
+- key citations cannot be grounded
+- the task would require guessing instead of evidence
+- the user asks for a confidence level that evidence cannot support
 
-Если статус не `PASS`, зафиксируй конкретные дефекты в `problems.md` и внеси только минимальные изменения.
+## Success condition
 
-После этого обнови `revision_log.md`, обнови `handoff.md` и снова запусти проверку в свежем контексте.
+Claim success only when:
+- the task matches the frozen scope
+- the draft is aligned with canonical section ids
+- nontrivial claims are traceable
+- feedback signals are digested and either applied or explicitly deferred
+- the final verifier returns `PASS` or `PASS_WITH_WARNINGS`
 
-## Когда нужно останавливаться со статусом FAIL
+Before claiming the workflow is structurally ready, run:
 
-Останавливайся и возвращай `FAIL`, если выполняется хотя бы одно из условий:
-
-- база источников недостаточна;
-- план внутренне развален или противоречив;
-- ссылки нельзя хотя бы базово проверить;
-- требования конфликтуют так, что драфтировать нельзя;
-- от тебя требуют уверенности, которую доказательства не поддерживают;
-- ключевые источники нужны, но недоступны.
-
-## Что считается успехом
-
-Задача считается успешно обработанной только если:
-
-- результат соответствует замороженной задаче;
-- утверждения можно проследить до источников;
-- известные риски явно помечены;
-- handoff не противоречит текущему состоянию артефактов;
-- итоговый статус проверки — `PASS` или `PASS_WITH_WARNINGS`.
+```bash
+python scripts/task_loop.py validate --task-id <TASK_ID>
+```

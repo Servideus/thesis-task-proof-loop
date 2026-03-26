@@ -1,13 +1,23 @@
 {
   "task_id": "<TASK_ID>",
-  "status": "PASS",
-  "summary": "",
-  "scope_match": true,
-  "outline_match": true,
-  "source_discipline_ok": true,
-  "traceability_ok": true,
-  "logic_ok": true,
-  "formatting_ok": true,
+  "generated_at": "",
+  "artifact_timestamps": {},
+  "overall_verdict": "UNKNOWN",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "status": "UNKNOWN",
+      "reason": "Свежая проверка ещё не выполнена."
+    }
+  ],
+  "quality_gates": [
+    {
+      "id": "QG3",
+      "status": "UNKNOWN",
+      "reason": "Не проверена дисциплина по источникам."
+    }
+  ],
+  "artifacts_used": [],
   "warnings": [],
   "blocking_issues": []
 }

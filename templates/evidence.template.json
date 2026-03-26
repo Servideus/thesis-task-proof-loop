@@ -1,0 +1,73 @@
+{
+  "task_id": "<TASK_ID>",
+  "generated_at": "",
+  "artifact_timestamps": {},
+  "overall_status": "UNKNOWN",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "text": "Заморожены границы и критерии приёмки задачи",
+      "status": "UNKNOWN",
+      "proof": [],
+      "gaps": []
+    },
+    {
+      "id": "AC2",
+      "text": "Утверждённые источники зарегистрированы и разграничены по силе",
+      "status": "UNKNOWN",
+      "proof": [],
+      "gaps": []
+    },
+    {
+      "id": "AC3",
+      "text": "План и драфт используют канонические section_id и не выходят за объём задачи",
+      "status": "UNKNOWN",
+      "proof": [],
+      "gaps": []
+    },
+    {
+      "id": "AC4",
+      "text": "Нетривиальные утверждения трассируемы через claim_source_map.csv",
+      "status": "UNKNOWN",
+      "proof": [],
+      "gaps": []
+    },
+    {
+      "id": "AC5",
+      "text": "Feedback-сигналы и проблемы зафиксированы в структурированном виде",
+      "status": "UNKNOWN",
+      "proof": [],
+      "gaps": []
+    }
+  ],
+  "quality_gates": [
+    {
+      "id": "QG3",
+      "status": "UNKNOWN",
+      "reason": "Не проверена дисциплина по источникам."
+    },
+    {
+      "id": "QG4",
+      "status": "UNKNOWN",
+      "reason": "Не проверена полнота трассируемости."
+    },
+    {
+      "id": "QG6",
+      "status": "UNKNOWN",
+      "reason": "Не проверена пропорциональность выводов доказательствам."
+    },
+    {
+      "id": "QG14",
+      "status": "UNKNOWN",
+      "reason": "Не проверено соответствие writing_profile/advisor_preferences."
+    },
+    {
+      "id": "QG15",
+      "status": "UNKNOWN",
+      "reason": "Не проверено усвоение evaluative/directive feedback."
+    }
+  ],
+  "artifacts_used": [],
+  "recommended_next_step": "verify",
+  "unresolved_gaps": []
+}
