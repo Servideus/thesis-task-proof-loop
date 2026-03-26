@@ -1,41 +1,41 @@
-# spec.md template
+# Шаблон spec.md
 
-## Task ID
+## Идентификатор задачи
 `<TASK_ID>`
 
-## Deliverable
-- target artifact:
-- target section or chapter:
-- target language:
+## Целевой результат
+- целевой артефакт:
+- целевой раздел или глава:
+- язык текста:
 
-## Scope
-- in scope:
-- out of scope:
+## Объём задачи
+- входит в задачу:
+- не входит в задачу:
 
-## Inputs
-- user notes:
-- approved outline:
-- approved sources:
-- existing draft fragments:
+## Входные материалы
+- заметки пользователя:
+- утверждённый план:
+- утверждённые источники:
+- существующие фрагменты черновика:
 
-## Constraints
-- target volume:
-- formatting rules:
-- terminology rules:
-- source restrictions:
+## Ограничения
+- целевой объём:
+- правила оформления:
+- правила по терминологии:
+- ограничения по источникам:
 
-## Acceptance criteria
+## Критерии приёмки
 - AC1:
 - AC2:
 - AC3:
 - AC4:
 - AC5:
 
-## Risks and open questions
-- risk 1:
-- risk 2:
+## Риски и открытые вопросы
+- риск 1:
+- риск 2:
 
-## Stop conditions
-- missing essential sources
-- conflicting requirements
-- unsupported core claims
+## Условия остановки
+- отсутствуют ключевые источники
+- требования конфликтуют
+- несущие утверждения не удаётся подкрепить

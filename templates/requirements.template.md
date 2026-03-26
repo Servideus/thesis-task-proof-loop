@@ -1,28 +1,28 @@
-# requirements.md template
+# Шаблон requirements.md
 
-## Institutional requirements
-- degree level:
-- formatting standard:
-- citation style:
-- structural requirements:
+## Институциональные требования
+- уровень работы:
+- стандарт оформления:
+- стиль ссылок:
+- требования к структуре:
 
-## User requirements
-- preferred terminology:
-- language constraints:
-- quote policy:
-- originality target if relevant:
+## Требования пользователя
+- предпочтительная терминология:
+- языковые ограничения:
+- политика по цитатам:
+- целевой уровень оригинальности, если он важен:
 
-## Source policy
-- approved source types:
-- disallowed source types:
-- handling of inaccessible sources:
+## Политика по источникам
+- допустимые типы источников:
+- недопустимые типы источников:
+- как обращаться с недоступными источниками:
 
-## Writing policy
-- preserve outline: yes/no
-- preserve existing fragments: yes/no
-- allowed transformations:
-- forbidden transformations:
+## Политика письма
+- сохранять план: да/нет
+- сохранять существующие фрагменты: да/нет
+- разрешённые трансформации:
+- запрещённые трансформации:
 
-## Review policy
-- strictness level:
-- whether PASS_WITH_WARNINGS is acceptable:
+## Политика проверки
+- уровень строгости:
+- допустим ли статус PASS_WITH_WARNINGS:

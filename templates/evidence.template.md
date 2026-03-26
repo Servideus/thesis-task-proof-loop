@@ -1,17 +1,17 @@
-# evidence.md template
+# Шаблон evidence.md
 
-## What was produced
-- files updated:
-- sections covered:
+## Что было сделано
+- обновлённые файлы:
+- покрытые разделы:
 
-## Source support summary
-- main source-backed blocks:
-- weakly supported blocks:
+## Сводка по опоре на источники
+- основные блоки с надёжной опорой:
+- блоки со слабой опорой:
 
-## Open risks
-- risk 1:
-- risk 2:
+## Открытые риски
+- риск 1:
+- риск 2:
 
-## Review notes
-- note 1:
-- note 2:
+## Заметки проверки
+- заметка 1:
+- заметка 2:

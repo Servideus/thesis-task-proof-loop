@@ -1,57 +1,57 @@
-# Quality Gates
+# Критерии качества
 
-Use these gates when freezing the task and when reviewing the result.
+Используй эти критерии при заморозке задачи и при финальной проверке результата.
 
-## Core gates
+## Основные критерии
 
-### QG1. Scope match
-The output matches the frozen task and does not drift into unrelated material.
+### QG1. Соответствие объёму задачи
+Текст соответствует замороженной задаче и не уходит в посторонний материал.
 
-### QG2. Outline match
-The output follows the approved outline or records justified deviations explicitly.
+### QG2. Соответствие плану
+Текст следует утверждённому плану или явно фиксирует обоснованные отклонения.
 
-### QG3. Source discipline
-Core claims rely only on approved sources from `sources_registry.md`.
+### QG3. Дисциплина по источникам
+Несущие утверждения опираются только на источники из `sources_registry.md`.
 
-### QG4. Traceability
-Substantive claims are present in `claim_source_map.csv`.
+### QG4. Трассируемость
+Содержательные утверждения присутствуют в `claim_source_map.csv`.
 
-### QG5. Citation plausibility
-No invented bibliographic details, page numbers, or quotations.
+### QG5. Правдоподобие ссылок
+Нет выдуманных библиографических сведений, страниц или цитат.
 
-### QG6. Evidence proportionality
-Claims are no stronger than the evidence allows.
+### QG6. Пропорциональность доказательствам
+Сила утверждений не превышает силу имеющейся опоры.
 
-### QG7. Internal logic
-The section is coherent, non-contradictory, and ordered.
+### QG7. Внутренняя логика
+Раздел связный, непротиворечивый и правильно организованный.
 
-### QG8. Terminology consistency
-Key terms are used consistently unless a distinction is explicitly introduced.
+### QG8. Последовательность терминов
+Ключевые термины используются последовательно, если только различие не введено явно.
 
-### QG9. Formatting compliance
-Known formatting rules are followed or deviations are recorded.
+### QG9. Соблюдение оформления
+Известные требования к оформлению соблюдены, либо отклонения явно записаны.
 
-### QG10. Honest uncertainty
-Open questions, weak evidence, and unresolved limits are labeled.
+### QG10. Честная неопределённость
+Открытые вопросы, слабая доказательная база и нерешённые ограничения явно помечены.
 
-## Optional gates
+## Дополнительные критерии
 
-### QG11. Concision
-The text is not padded with generic filler.
+### QG11. Сжатость без пустоты
+Текст не раздут бессодержательным академическим шумом.
 
-### QG12. Quote control
-Direct quotations are used deliberately and recorded in `quotes.md` when relevant.
+### QG12. Контроль цитат
+Прямые цитаты используются осознанно и при необходимости фиксируются в `quotes.md`.
 
-### QG13. Revision discipline
-Fixes are targeted and logged in `revision_log.md`.
+### QG13. Дисциплина правок
+Исправления точечные и зафиксированы в `revision_log.md`.
 
-## Review result meanings
+## Значения итогового результата
 
 ### PASS
-The section meets the core gates.
+Раздел проходит основные критерии.
 
 ### PASS_WITH_WARNINGS
-The section is usable, but there are non-blocking risks that must remain visible.
+Раздел в целом пригоден, но есть не-блокирующие риски, которые должны оставаться видимыми.
 
 ### FAIL
-The section is not reliable enough because scope, sources, traceability, or logic are insufficient.
+Раздел недостаточно надёжен из-за проблем с объёмом задачи, источниками, трассируемостью или логикой.

@@ -1,13 +1,13 @@
-# problems.md template
+# Шаблон problems.md
 
-## Blocking issues
-- issue id:
-  - description:
-  - affected file:
-  - required fix:
+## Блокирующие проблемы
+- идентификатор проблемы:
+  - описание:
+  - затронутый файл:
+  - обязательное исправление:
 
-## Non-blocking issues
-- issue id:
-  - description:
-  - affected file:
-  - suggested fix:
+## Неблокирующие проблемы
+- идентификатор проблемы:
+  - описание:
+  - затронутый файл:
+  - предлагаемое исправление:

@@ -1,91 +1,100 @@
-# Workflow
+# Рабочий цикл
 
-## Loop
+## Общая схема
 
 ```text
-freeze -> source lock -> outline -> draft -> claim map -> review -> targeted fix -> review again
+заморозка -> фиксация источников -> план -> драфт -> карта утверждений -> проверка -> точечные правки -> повторная проверка
 ```
 
-## 1. Initialize or reuse a task
+## 1. Инициализировать или переиспользовать задачу
 
-Create a stable task id and work inside:
+Создай устойчивый идентификатор задачи и работай внутри:
 
 ```text
 .agents/tasks/<TASK_ID>/
 ```
 
-If the task already exists, inspect its current status before editing files.
+Если задача уже существует, сначала посмотри её текущее состояние, а потом что-то меняй.
 
-## 2. Freeze the task
+## 2. Заморозить задачу
 
-Create `spec.md` and `requirements.md`.
+Создай `spec.md` и `requirements.md`.
 
-Before moving on, make sure these are explicit:
-- target section;
-- scope;
-- exclusions;
-- formatting rules;
-- acceptance criteria.
+Перед переходом дальше убедись, что явно зафиксированы:
 
-## 3. Lock approved sources
+- какой раздел или глава сейчас в работе;
+- что входит в объём задачи;
+- что исключено;
+- какие правила оформления важны;
+- какие критерии определяют успех.
 
-Create `sources_registry.md`.
+## 3. Зафиксировать утверждённые источники
 
-Separate stronger sources from weaker background material. Mark inaccessible or partially checked items clearly.
+Создай `sources_registry.md`.
 
-Do not rely on unregistered sources.
+Разделяй:
 
-## 4. Build the outline
+- более сильные источники;
+- слабые фоновые материалы;
+- недоступные или частично проверенные источники;
+- источники, которые допустимы только для контекста, но не для несущих тезисов.
 
-Create `outline.md`.
+Не опирайся на незарегистрированные источники.
 
-The outline should be detailed enough for later source mapping.
+## 4. Построить план
 
-## 5. Draft from approved materials
+Создай `outline.md`.
 
-Create `draft.md`.
+План должен быть достаточно подробным, чтобы потом можно было привязать тезисы к источникам.
 
-Keep factual support separate from interpretation. Stay inside the frozen outline.
+## 5. Написать драфт по утверждённым материалам
 
-## 6. Map claims to sources
+Создай `draft.md`.
 
-Create `claim_source_map.csv`.
+Отделяй фактическую опору от интерпретации и выводов. Не выходи за рамки замороженного плана.
 
-Track every substantive claim.
+## 6. Связать утверждения с источниками
 
-## 7. Review
+Создай `claim_source_map.csv`.
 
-Create `evidence.md` and `verdict.json`.
+Каждое содержательное утверждение должно быть отслеживаемо.
 
-The review should check:
-- scope alignment;
-- source discipline;
-- unsupported claims;
-- logical continuity;
-- formatting drift.
+## 7. Провести проверку
 
-## 8. Apply targeted fixes
+Создай `evidence.md` и `verdict.json`.
 
-If needed, write issues into `problems.md`, apply only targeted corrections, and record the changes in `revision_log.md`.
+Проверка должна смотреть хотя бы на:
 
-## 9. Repeat or stop
+- соответствие задаче;
+- дисциплину по источникам;
+- неподкреплённые тезисы;
+- логическую связность;
+- дрейф структуры или оформления.
 
-Repeat until:
-- PASS;
-- PASS_WITH_WARNINGS;
-- or FAIL because the evidence base or requirements are not good enough.
+## 8. Внести точечные исправления
 
-## Stop conditions
+Если это нужно, запиши проблемы в `problems.md`, внеси только узкие исправления и зафиксируй изменения в `revision_log.md`.
 
-Return FAIL when:
-- requirements conflict;
-- essential sources are missing;
-- citations cannot be grounded;
-- the task would require guesswork.
+## 9. Повторять или остановиться
 
-## Practical guidance
+Повторяй цикл до одного из исходов:
 
-- Small reliable steps beat giant rewrites.
-- The reviewer should be stricter than the drafter.
-- Stable text should stay stable unless a real defect requires change.
-- Traceability matters more than polish.
+- `PASS`;
+- `PASS_WITH_WARNINGS`;
+- честный `FAIL`, если источники или требования не позволяют двигаться дальше.
+
+## Условия остановки
+
+Возвращай `FAIL`, если:
+
+- требования конфликтуют;
+- отсутствуют ключевые источники;
+- ссылки нельзя приземлить на реальные данные;
+- задача требует догадок вместо опоры.
+
+## Практические принципы
+
+- Маленькие надёжные шаги лучше, чем гигантские рерайты.
+- Проверяющий должен быть строже, чем драфтер.
+- Стабильный текст не надо трогать без реального дефекта.
+- Трассируемость важнее риторического лоска.

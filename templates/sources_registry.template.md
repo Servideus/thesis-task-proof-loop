@@ -1,12 +1,12 @@
-# sources_registry.md template
+# Шаблон sources_registry.md
 
-| source_id | short_title | source_type | language | trust_level | full_text_available | allowed_use | notes |
+| source_id | краткое название | тип источника | язык | уровень доверия | полный текст доступен | допустимое использование | заметки |
 |---|---|---|---|---|---|---|---|
-| S1 |  |  |  | high / medium / low | yes / partial / no | core claims / context only / quote only |  |
+| S1 |  |  |  | высокий / средний / низкий | да / частично / нет | несущие тезисы / только контекст / только цитата |  |
 | S2 |  |  |  |  |  |  |  |
 
-## Guidance
+## Подсказки
 
-- `trust_level` should reflect how much weight the source can carry.
-- `full_text_available` should not be marked `yes` unless it is actually available.
-- `allowed_use` helps prevent weak sources from supporting strong claims.
+- `уровень доверия` должен показывать, сколько веса источник может нести.
+- `полный текст доступен` нельзя отмечать как `да`, если полного текста реально нет.
+- `допустимое использование` помогает не опирать сильные выводы на слабые источники.

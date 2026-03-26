@@ -1,11 +1,11 @@
-# revision_log.md template
+# Шаблон revision_log.md
 
-## Iteration 1
-- changed files:
-- issues addressed:
-- unchanged stable blocks:
+## Итерация 1
+- изменённые файлы:
+- какие проблемы закрыты:
+- какие стабильные блоки не трогались:
 
-## Iteration 2
-- changed files:
-- issues addressed:
-- unchanged stable blocks:
+## Итерация 2
+- изменённые файлы:
+- какие проблемы закрыты:
+- какие стабильные блоки не трогались:

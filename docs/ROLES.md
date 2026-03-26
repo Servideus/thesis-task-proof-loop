@@ -1,160 +1,188 @@
-# Roles
+# Роли
 
-The skill should keep roles conceptually separate even if a single agent executes multiple steps.
+Даже если шаги выполняет один агент, роли должны быть концептуально разделены.
 
-## 1. Task Freezer
+## 1. Замораживатель задачи
 
-Purpose: turn the user's request into a frozen, reviewable task definition.
+Задача роли: превратить запрос пользователя в зафиксированное и проверяемое определение задачи.
 
-Inputs:
-- user request;
-- institutional requirements;
-- existing outline;
-- target section or chapter name.
+Входы:
 
-Outputs:
+- запрос пользователя;
+- требования вуза или преподавателя;
+- существующий план;
+- название целевой главы или раздела.
+
+Выходы:
+
 - `spec.md`
 - `requirements.md`
 
-Responsibilities:
-- define scope;
-- record exclusions;
-- define acceptance criteria;
-- record unresolved conflicts.
+Обязанности:
 
-Must not:
-- start drafting before the task is frozen;
-- silently fill missing requirements with guesses.
+- определить объём и границы;
+- зафиксировать исключения;
+- задать критерии приёмки;
+- отметить нерешённые конфликты.
 
-## 2. Source Curator
+Нельзя:
 
-Purpose: build and label the approved source base.
+- начинать драфт до заморозки задачи;
+- молча заполнять пробелы догадками.
 
-Inputs:
-- user-approved sources;
-- available citations and excerpts;
-- source metadata.
+## 2. Куратор источников
 
-Outputs:
+Задача роли: собрать и разметить утверждённую базу источников.
+
+Входы:
+
+- источники, одобренные пользователем;
+- доступные библиографические данные и выписки;
+- метаданные источников.
+
+Выходы:
+
 - `sources_registry.md`
-- optional notes in `evidence.md`
+- при необходимости заметки в `evidence.md`
 
-Responsibilities:
-- register sources;
-- label trust level;
-- mark accessibility;
-- warn about weak, missing, or secondary-only evidence.
+Обязанности:
 
-Must not:
-- register inaccessible sources as fully checked;
-- treat incomplete references as verified.
+- регистрировать источники;
+- помечать уровень доверия;
+- отмечать доступность полного текста;
+- предупреждать о слабых, неполных или вторичных источниках.
 
-## 3. Outline Builder
+Нельзя:
 
-Purpose: transform the frozen task into a structured outline.
+- помечать недоступный источник как полностью проверенный;
+- считать неполную ссылку проверенной ссылкой.
 
-Inputs:
+## 3. Построитель плана
+
+Задача роли: превратить замороженную задачу в структурированный план.
+
+Входы:
+
 - `spec.md`
 - `requirements.md`
 - `sources_registry.md`
 
-Outputs:
+Выходы:
+
 - `outline.md`
 
-Responsibilities:
-- keep structure aligned with scope;
-- make sections granular enough for claim mapping;
-- avoid outline drift.
+Обязанности:
 
-Must not:
-- add major sections not justified by the task.
+- держать структуру в рамках задачи;
+- делать разделы достаточно детализированными для последующей привязки тезисов к источникам;
+- не допускать расползания плана.
 
-## 4. Drafter
+Нельзя:
 
-Purpose: produce a controlled draft from approved materials.
+- добавлять крупные разделы без оправдания со стороны задачи.
 
-Inputs:
+## 4. Драфтер
+
+Задача роли: писать контролируемый черновик по утверждённым материалам.
+
+Входы:
+
 - `spec.md`
 - `requirements.md`
 - `sources_registry.md`
 - `outline.md`
-- user notes or excerpts;
-- existing draft fragments.
+- заметки и выписки пользователя;
+- существующие фрагменты текста.
 
-Outputs:
+Выходы:
+
 - `draft.md`
 - `claim_source_map.csv`
-- `quotes.md` if relevant.
+- `quotes.md`, если нужны прямые цитаты
 
-Responsibilities:
-- write only from approved materials;
-- keep claims proportional to evidence;
-- preserve terminology and logic.
+Обязанности:
 
-Must not:
-- invent support;
-- pad the text with generic filler;
-- rewrite the outline on the fly.
+- писать только по утверждённым материалам;
+- держать силу утверждений пропорциональной доказательствам;
+- сохранять термины и логику.
 
-## 5. Reviewer
+Нельзя:
 
-Purpose: independently inspect the draft in a fresh context.
+- выдумывать опору для тезисов;
+- раздувать текст пустым академическим шумом;
+- на ходу переписывать план без фиксации этого решения.
 
-Inputs:
-- full task folder.
+## 5. Проверяющий
 
-Outputs:
+Задача роли: независимо проверить драфт в свежем контексте.
+
+Входы:
+
+- вся папка задачи.
+
+Выходы:
+
 - `verdict.json`
 - `problems.md`
-- review notes in `evidence.md`.
+- заметки в `evidence.md`
 
-Responsibilities:
-- inspect structure;
-- inspect source discipline;
-- flag unsupported claims;
-- flag contradictions;
-- flag overstatement.
+Обязанности:
 
-Must not:
-- repair the text during review;
-- ignore missing evidence because the draft sounds plausible.
+- проверять структуру;
+- проверять дисциплину по источникам;
+- искать неподкреплённые утверждения;
+- искать противоречия;
+- искать завышенные выводы.
 
-## 6. Fixer
+Нельзя:
 
-Purpose: apply targeted corrections from the reviewer.
+- чинить текст прямо во время проверки;
+- игнорировать отсутствие доказательств только потому, что текст звучит уверенно.
 
-Inputs:
+## 6. Исправляющий
+
+Задача роли: вносить точечные правки по замечаниям проверяющего.
+
+Входы:
+
 - `problems.md`
-- current draft artifacts.
+- текущие рабочие артефакты.
 
-Outputs:
-- updated `draft.md`
-- updated `claim_source_map.csv`
+Выходы:
+
+- обновлённый `draft.md`
+- обновлённый `claim_source_map.csv`
 - `revision_log.md`
 
-Responsibilities:
-- fix only recorded defects;
-- preserve stable sections;
-- log what changed.
+Обязанности:
 
-Must not:
-- do broad stylistic rewrites without need;
-- erase traceability.
+- исправлять только зафиксированные дефекты;
+- сохранять стабильные части текста;
+- логировать изменения.
 
-## 7. Integrator
+Нельзя:
 
-Purpose: assemble the final deliverable when the loop passes.
+- делать широкий стилистический рерайт без необходимости;
+- ломать трассируемость.
 
-Inputs:
-- all stable task artifacts.
+## 7. Интегратор
 
-Outputs:
-- final reviewed section or chapter;
-- final `verdict.json`.
+Задача роли: собрать финальный результат, когда цикл пройден.
 
-Responsibilities:
-- ensure consistency across files;
-- keep the final output aligned with the frozen task.
+Входы:
 
-Must not:
-- introduce new claims at the end.
+- все стабильные артефакты задачи.
+
+Выходы:
+
+- финальный проверенный раздел или глава;
+- итоговый `verdict.json`
+
+Обязанности:
+
+- обеспечить согласованность между файлами;
+- удержать итоговый текст в рамках замороженной задачи.
+
+Нельзя:
+
+- добавлять новые содержательные утверждения в самом конце.
