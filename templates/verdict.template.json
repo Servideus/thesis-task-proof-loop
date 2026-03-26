@@ -1,0 +1,13 @@
+{
+  "task_id": "<TASK_ID>",
+  "status": "PASS",
+  "summary": "",
+  "scope_match": true,
+  "outline_match": true,
+  "source_discipline_ok": true,
+  "traceability_ok": true,
+  "logic_ok": true,
+  "formatting_ok": true,
+  "warnings": [],
+  "blocking_issues": []
+}
