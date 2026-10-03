@@ -1,56 +1,43 @@
+[Инструкция на русском языке здесь](README.ru.md).
+
 # thesis-task-proof-loop
 
-## English overview
+An agent skill and repository-local workflow for long-form academic writing. Task scope, approved sources, drafts and verification evidence live in explicit files. Claims are mapped to sources, feedback is recorded, and verification happens in a fresh context.
 
-An agent skill and repository-local workflow for long-form academic writing.
-It keeps the task scope, approved sources, drafts and verification evidence in explicit files.
-Claims are mapped to sources; candidate sources remain separate until approved.
-The workflow covers outlining, drafting, evidence checks, verification and targeted revisions.
-Feedback is logged and linked to the affected sections or claims.
-A Python helper initializes task folders, validates artifact structure and reports status.
-Verification is performed in a fresh context; the helper's structural checks do not establish that a claim is true.
-Detailed workflow documentation and usage instructions are provided in Russian below.
-
-Репозиторий со skill для Codex-подобных агентов, который помогает вести длинные академические задачи через repo-local workflow с явными артефактами, структурированным feedback loop и свежей проверкой.
-
-Базовая идея:
+## Workflow
 
 ```text
 init -> freeze -> sources -> outline -> draft -> map -> evidence -> verify -> fix -> evidence -> verify
 ```
 
-Цель не в том, чтобы агент писал "убедительно", а в том, чтобы он писал управляемо:
-- замораживал рамку задачи
-- отделял approved sources от candidate sources
-- держал канонические `section_id`
-- маппил содержательные claims к источникам
-- логировал evaluative и directive feedback
-- проверял результат в свежем контексте
-- правил текст минимальными безопасными диффами
+The workflow freezes scope, separates approved and candidate sources, preserves section IDs, maps claims to sources and records feedback. Revisions should be small and tied to the evidence or feedback that prompted them.
 
-## Что изменилось в workflow
+## Setup and quick start
 
-Теперь это не только набор правил, но и исполняемая инфраструктура:
-- `scripts/task_loop.py` умеет `init`, `status`, `validate`
-- появились строгие схемы артефактов в `references/SCHEMAS.md`
-- добавлены недостающие шаблоны `outline.md`, `draft.md`, `quotes.md`
-- появились `writing_profile.md` и `advisor_preferences.md`
-- появились `candidate_sources.md` и `scratchpad.md` для side-turn материалов
-- появились `feedback_log.jsonl`, `feedback_digest.md`, `events.jsonl`
-- `verdict.json` и `evidence.json` теперь criterion-level, а не только "всё хорошо / всё плохо"
+Use the repository's [SKILL.md](SKILL.md) as the agent instructions. The Python helper initializes task folders, validates artifact structure and reports status:
 
-## Основные файлы skill
+```sh
+python scripts/task_loop.py init --task-id chapter-1 --task-text "Prepare chapter 1 of the thesis"
+python scripts/task_loop.py validate --task-id chapter-1
+python scripts/task_loop.py status --task-id chapter-1
+```
 
-- `SKILL.md` — главные инструкции для агента
-- `scripts/task_loop.py` — инициализация и валидация repo-local task folder
-- `references/REFERENCE.md` — справка по командам и структуре
-- `references/SCHEMAS.md` — схемы и правила валидации артефактов
-- `references/COMMANDS.md` — command-level prompt shapes
-- `references/SUBAGENTS.md` — границы ролей
-- `docs/` — человеческая документация по workflow, quality gates и usage
-- `templates/` — шаблоны файлов задачи
+Only `init`, `status` and `validate` are implemented as helper commands. The other workflow phases are agent actions described in `SKILL.md` and [references/COMMANDS.md](references/COMMANDS.md). Structural validation does not establish that a claim is true.
 
-## Ожидаемая структура задачи
+## Repository layout
+
+| Path | Purpose |
+|---|---|
+| `SKILL.md` | Main agent instructions |
+| `scripts/task_loop.py` | Task initialization and structural validation |
+| `references/REFERENCE.md` | Command and artifact reference |
+| `references/SCHEMAS.md` | Artifact schemas and validation rules |
+| `references/COMMANDS.md` | Prompts for workflow phases |
+| `references/SUBAGENTS.md` | Role boundaries |
+| `docs/` | Workflow, quality gates, roles and usage |
+| `templates/` | Task file templates |
+
+## Task artifacts
 
 ```text
 .agents/tasks/<TASK_ID>/
@@ -77,113 +64,29 @@ init -> freeze -> sources -> outline -> draft -> map -> evidence -> verify -> fi
   scratchpad.md
 ```
 
-## Main-line vs side-turns
+Main-line artifacts are the specification, requirements, writing/advisor preferences, approved source registry, outline, draft, claim map, quotes, evidence, feedback digest, handoff and verdict. Candidate sources, scratchpad, raw feedback and events are side-turn material.
 
-Main-line артефакты:
-- `spec.md`
-- `requirements.md`
-- `writing_profile.md`
-- `advisor_preferences.md`
-- `sources_registry.md`
-- `outline.md`
-- `draft.md`
-- `claim_source_map.csv`
-- `quotes.md`
-- `evidence.md`
-- `evidence.json`
-- `feedback_digest.md`
-- `handoff.md`
-- `verdict.json`
+`sources_registry.md` contains approved sources only. Candidate sources cannot be cited until approved. `feedback_log.jsonl` records raw feedback; `feedback_digest.md` records actionable hints; `scratchpad.md` holds ideas outside the accepted task. Evidence and verdicts are recorded per criterion.
 
-Side-turn артефакты:
-- `candidate_sources.md`
-- `scratchpad.md`
-- `feedback_log.jsonl`
-- `events.jsonl`
+## Feedback and revision
 
-Правило:
-- в `sources_registry.md` живут только approved sources
-- в `candidate_sources.md` живут материалы, которые нельзя цитировать до одобрения
-- в `feedback_log.jsonl` лежит raw next-state signal
-- в `feedback_digest.md` лежит distilled hint
-- в `scratchpad.md` лежат побочные идеи, которые не считаются частью задачи
+Feedback can evaluate the previous result and direct the next change. Preserve the original feedback, extract a short actionable hint, link it to the affected section/claim/file and mark it as applied or deferred. Keep the revision history instead of replacing it with a general success statement.
 
-## Быстрый старт
+## Rules and limitations
 
-### 1. Инициализировать задачу
+- Do not invent links, quotations, DOI values or bibliographic details.
+- Cite approved sources only; keep candidates separate.
+- Do not expand the draft during verification or let the verifier edit it.
+- Apply targeted revisions instead of broad rewrites.
+- Update task artifacts before resetting context.
 
-```bash
-python scripts/task_loop.py init --task-id chapter-1 --task-text "Подготовить главу 1 дипломной работы"
-```
+Provide a chapter outline, notes, accessible sources and institutional/advisor requirements when available. Missing evidence should slow the workflow rather than produce unsupported text.
 
-### 2. Проверить структуру
+## Further documentation
 
-```bash
-python scripts/task_loop.py validate --task-id chapter-1
-```
+- [Complete workflow](docs/WORKFLOW.md)
+- [Quality gates](docs/QUALITY_GATES.md)
+- [Roles](docs/ROLES.md)
+- [Usage prompts](docs/USAGE_PROMPTS.md)
 
-### 3. Посмотреть статус и следующий шаг
-
-```bash
-python scripts/task_loop.py status --task-id chapter-1
-```
-
-## Workflow commands
-
-Skill понимает команды:
-- `init`
-- `freeze`
-- `sources`
-- `outline`
-- `draft`
-- `map`
-- `evidence`
-- `verify`
-- `fix`
-- `run`
-- `status`
-- `validate`
-
-`init`, `status`, `validate` поддерживаются скриптом.
-Остальные команды — это фазы workflow, которые агент выполняет по инструкциям из `SKILL.md` и `references/COMMANDS.md`.
-
-## Почему здесь есть feedback loop
-
-Репозиторий теперь использует идею next-state signals:
-- user/advisor/verifier feedback несёт evaluative signal: стало лучше или хуже
-- тот же feedback часто несёт directive signal: что именно нужно было сделать иначе
-
-Поэтому workflow теперь заставляет:
-1. сохранять raw feedback отдельно
-2. дистиллировать короткий actionable hint
-3. связывать hint с affected section / claim / file
-4. явно помечать, применён ли сигнал или отложен
-
-Это уменьшает хаос в длинных итерациях и даёт более честную историю исправлений.
-
-## Жёсткие правила
-
-- не выдумывать ссылки, цитаты, DOI, URL и библиографию
-- не ссылаться на неутверждённые источники
-- не путать candidate sources с approved sources
-- не расширять драфт на шаге проверки
-- не давать verifier править текст
-- не делать широкий рерайт вместо точечных правок
-- не сбрасывать контекст до обновления task artifacts
-
-## Документация
-
-- `docs/WORKFLOW.md` — полный цикл
-- `docs/QUALITY_GATES.md` — критерии качества
-- `docs/ROLES.md` — роли и границы ответственности
-- `docs/USAGE_PROMPTS.md` — примеры запуска
-
-## Практическая рекомендация
-
-Этот skill работает лучше, если в репозитории уже лежат:
-- план диплома или хотя бы план главы
-- заметки и выписки
-- файлы источников или проверяемые библиографические данные
-- требования вуза и научрука
-
-Если этого нет, workflow должен замедляться, а не фантазировать.
+This repository packages a workflow and structural helper; factual verification still requires checking the actual sources.
