@@ -1,5 +1,16 @@
 # thesis-task-proof-loop
 
+## English overview
+
+An agent skill and repository-local workflow for long-form academic writing.
+It keeps the task scope, approved sources, drafts and verification evidence in explicit files.
+Claims are mapped to sources; candidate sources remain separate until approved.
+The workflow covers outlining, drafting, evidence checks, verification and targeted revisions.
+Feedback is logged and linked to the affected sections or claims.
+A Python helper initializes task folders, validates artifact structure and reports status.
+Verification is performed in a fresh context; the helper's structural checks do not establish that a claim is true.
+Detailed workflow documentation and usage instructions are provided in Russian below.
+
 Репозиторий со skill для Codex-подобных агентов, который помогает вести длинные академические задачи через repo-local workflow с явными артефактами, структурированным feedback loop и свежей проверкой.
 
 Базовая идея:
